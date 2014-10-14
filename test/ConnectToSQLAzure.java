@@ -23,6 +23,7 @@ public class ConnectToSQLAzure {
 		String strQuestion = "";
 		String colName = "";
 		String line;
+		String SQL = "";
 		
 		String inputDatFile = "C:\\Users\\Sagehari Maiko\\Documents\\jsontest\\home_care_test2.dat";
 		File inputFile = new File(inputDatFile);
@@ -34,6 +35,10 @@ public class ConnectToSQLAzure {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			con = DriverManager.getConnection(connectionUrl);
 			con.setAutoCommit(false);
+			
+			SQL = "DELETE FROM home_care";
+			pstmt = con.prepareStatement(SQL);
+			pstmt.executeUpdate();
 
 			// Create and execute an SQL statement that returns some data.
 			csvArray = in.readLine().split("\\,");
@@ -44,7 +49,7 @@ public class ConnectToSQLAzure {
 				colName = colName + csvArray[i];
 			
 			}
-			String SQL = "INSERT INTO home_care (" + colName + ") values (" + strQuestion + ")";
+			SQL = "INSERT INTO home_care (" + colName + ") values (" + strQuestion + ")";
 			//System.out.println(SQL);
 			//System.out.println(strQuestion);
 			pstmt = con.prepareStatement(SQL);
