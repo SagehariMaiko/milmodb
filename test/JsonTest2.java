@@ -10,14 +10,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-public class JsonTest3 {
+public class JsonTest2 {
 
 	private final static String outputDatFile = "C:\\Users\\Sagehari Maiko\\Documents\\jsontest\\home_care.dat";	// change pass
 	private final static String inputDatFile = "C:\\Users\\Sagehari Maiko\\Documents\\jsontest\\sampleheader.dat";
 	
     public static void main(String args[]) throws JsonParseException,
             JsonMappingException, IOException {
-        JsonTest3 converter = new JsonTest3();
+        JsonTest2 converter = new JsonTest2();
         converter.parse("sample3.json");
     }
     public void parse(String fname) throws JsonParseException,
@@ -95,7 +95,7 @@ public class JsonTest3 {
 		}
         @Override
         public String toString() {
-            return company_type+":"+office_time_hol+":"+office_time_sun;
+            return company_type+","+office_time_hol+","+office_time_sun;
         }
     }
 }
