@@ -7,12 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public class ConnectToSQLAzure {
+public class ConnectToSQLAzure_degree {
 
 	public static void main(String[] args) throws IOException {
 
 		// Create a variable for the connection string.
-		//String connectionUrl = "jdbc:sqlserver://zmc987ph20.database.windows.net:1433;database=milmodbdev;user=welmo@zmc987ph20;password={we11Motion};encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;sendStringParametersAsUnicode=false;";
 		String connectionUrl = "jdbc:sqlserver://zmc987ph20.database.windows.net:1433;database=milmodbdev;user=welmo@zmc987ph20;password={we11Motion};encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
 
 		// Declare the JDBC objects.
@@ -27,9 +26,8 @@ public class ConnectToSQLAzure {
 		String SQL = "";
 		int ColLength = 0;
 		int j = 0;
-		String str = "";
 		
-		String inputDatFile = "./110.dat";
+		String inputDatFile = "./110_degree.dat";
 		File inputFile = new File(inputDatFile);
 		BufferedReader in = null;
 		in = new BufferedReader(new FileReader(inputFile));
@@ -40,48 +38,39 @@ public class ConnectToSQLAzure {
 			con = DriverManager.getConnection(connectionUrl);
 			con.setAutoCommit(false);
 			
-			SQL = "DELETE FROM home_care";
-			pstmt = con.prepareStatement(SQL);
-			pstmt.executeUpdate();
+			//SQL = "DELETE FROM home_care";
+			//pstmt = con.prepareStatement(SQL);
+			//pstmt.executeUpdate();
 
 			// Create and execute an SQL statement that returns some data.
 			colName = in.readLine();
-			csvArray = colName.split("\\,");
 			
-			ColLength = csvArray.length;
-			for (int i = 0; i < ColLength; i++){
-				if(i != 0){strQuestion = strQuestion + ",";}
-				strQuestion = strQuestion + "?";
-			}
-
-			SQL = "INSERT INTO home_care (" + colName + ") values (" + strQuestion + ")";
-
+			SQL = "INSERT INTO degree (" + colName + ") values (?,?,?,?)";
 			pstmt = con.prepareStatement(SQL);
 
 			while ((line = in.readLine()) != null){
+				//System.out.println("line =" + line);
 				csvArray = line.split("\\,");
+				//System.out.println("csvArray.length = " + csvArray.length);
 				for ( j = 0; j < csvArray.length; j++){
-					if(j == 0){
-						pstmt.setInt(j+1,Integer.parseInt(csvArray[j]));
-					} else {
-						if(("").equals( csvArray[j]) || ("null").equals( csvArray[j]) || ("NULL").equals( csvArray[j])) {
-							pstmt.setString(j+1,null);
-						} else {
-							pstmt.setString(j+1,csvArray[j] );
-						}
-					}
-					//System.out.println((j + 1) + ":" + csvArray[j] + ":" + csvArray[j].length());
+					if(("").equals( csvArray[j]) || ("null").equals( csvArray[j]) || ("NULL").equals( csvArray[j])){ csvArray[j] = null;}
+					//System.out.println((j + 1) + ":" + csvArray[j]);
+					pstmt.setString(j+1,csvArray[j]);
 				}
-				if ( j < ColLength ) {
-					pstmt.setString(j+1,null);
-				}
-				System.out.println(">>>>GO INSERT .....");
+				System.out.println(">>>>GO INSERT ( j = " + j + ".....");
 				pstmt.executeUpdate();
 			}
 			System.out.println(">>>>INSERT OK.....");
 			con.commit();
 			System.out.println(">>>>COMMIT OK.....");
 			pstmt.close();
+
+			// Iterate through the data in the result set and display it.
+			//while (rs.next()) {
+			//	System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+			//}
+			//rs.close();
+			//stmt.close();
 		}
 
 		// Handle any errors that may have occurred.
@@ -105,8 +94,10 @@ public class ConnectToSQLAzure {
 			catch (SQLException se) {}
 		}
 		finally {
+			//if (rs != null) try { rs.close(); } catch(Exception e) {}
 			if (in != null) try { in.close(); } catch(Exception e) {}
 			if (con != null) try { con.close(); } catch(Exception e) {}
+			//if (stmt != null) try { stmt.close(); } catch(Exception e) {}
 			if (pstmt != null) try { pstmt.close(); } catch(Exception e) {}
 		}
 	}
