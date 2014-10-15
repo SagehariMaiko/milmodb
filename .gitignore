@@ -1,0 +1,30 @@
+/tmp
+/.classpath
+/.project
+/.settings
+/eclipse
+/bin
+/application.log
+/crud
+/secure
+/conf/crud
+/conf/secure
+/conf/application.conf
+/public/crud
+/public/secure
+*.log
+*.pyc
+/nbproject/private/
+/build/
+/dist/
+/logs/system.out
+/conf/application.conf
+
+#for testing
+/test-result
+
+# for IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
