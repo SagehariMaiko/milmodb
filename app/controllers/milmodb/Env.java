@@ -42,7 +42,7 @@ public class Env {
 		});
 	}
 	
-	private File find(String p) {
+	public static File find(String p) {
 		File f = new File(p);
 		if (!f.exists()) {
 			throw new IllegalArgumentException("指定された'" + p + "'フォルダが見つかりません。");

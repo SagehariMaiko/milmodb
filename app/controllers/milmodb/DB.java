@@ -11,7 +11,7 @@ public class DB {
 	private static final String URL_FORMAT = "jdbc:sqlserver://%s:%s;database=%s";
 	private static final String DB_SERVER = "zmc987ph20.database.windows.net";
 	private static final String DB_PORT = "1433";
-	private static final String DB_NAME = "milmodbdev";
+	private static final String DB_NAME = "milmodb";
 	private static final String DB_USER = "welmo@zmc987ph20";
 	private static final String DB_PASSWORD = "we11Motion";
 	
@@ -54,15 +54,19 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
-	
-	void insert(String table, Map<String, String> values) {
+
+	void insert(String table, List<String> ColList, List<Map<String,String>> offices) {
 		PreparedStatement ps = null;
+		PreparedStatement ps_d = null;
 		try {
-			ArrayList<String> bindArgs = new ArrayList<String>();
 			StringBuilder sql = new StringBuilder();
-			int officeid_i = prepareSql(sql, bindArgs, table, values);
+			StringBuilder sql_d = new StringBuilder();
+			j_prepareSql(sql, ColList, table);
+			j_prepareSql_degree(sql_d);
 			ps = con.prepareStatement(sql.toString());
-			insertExecute(ps, bindArgs, officeid_i);
+			ps_d = con.prepareStatement(sql_d.toString());
+			System.out.println(sql_d.toString());
+			insertExecute(ps, ps_d, table, ColList, offices);
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
 		} finally {
@@ -70,6 +74,7 @@ public class DB {
 				try {
 					System.out.println(">> ps Close");
 					ps.close();
+					ps_d.close();
 				} catch (SQLException e) {
 					throw new IllegalStateException(e);
 				}
@@ -77,46 +82,68 @@ public class DB {
 		}
 	}
 	
-	private void insertExecute(PreparedStatement ps, ArrayList<String> bindArgs, int officeid_i) throws SQLException {
-		for (int i = 0; i < bindArgs.size(); i++) {
-			String bindArg = bindArgs.get(i);
-			if (i == officeid_i){
-				ps.setInt(i + 1, Integer.parseInt(bindArg));
-				System.out.println(">> officeid_id" + Integer.parseInt(bindArg));
-				continue;
+	
+	private void insertExecute(PreparedStatement ps, PreparedStatement ps_d, String table, List<String> ColList, List<Map<String,String>> offices) throws SQLException {
+		int office_id = 0;
+		for (Map<String,String> c : offices) {
+			ps.setInt(1, office_id);
+			for ( int i = 0; i < ColList.size(); ++i ) {
+				String str = c.get(ColList.get(i));
+				
+				ps.setString(i + 2, str);
 			}
-			ps.setString(i + 1, bindArg);
-			System.out.println(">> " + (i + 1) + " : " +  bindArg);
+			
+			ps_d.setString(1, table);
+			ps_d.setInt(2, office_id);
+			ps_d.setString(3, c.get("latitude"));
+			ps_d.setString(4, c.get("longitude"));
+			
+			ps.execute();
+			ps_d.execute();
+			
+			office_id++;
 		}
-		
-		ps.execute();
+
 	}
 
-	private int prepareSql(StringBuilder sql, ArrayList<String> bindArgs, String table, Map<String, String> values) {
+	private void j_prepareSql(StringBuilder sql, List<String> ColList, String table) {
 		sql.append("INSERT");
 		sql.append(" INTO ");
 		sql.append(table);
 		sql.append('(');
 
-		int size = (values != null && values.size() > 0) ? values.size() : 0;
 		int i = 0;
-		int officeid_i = 0;
-		for (String colName : values.keySet()) {
+		sql.append("office_id,");
+		for (i = 0; i < ColList.size(); ++i) {
 			sql.append((i > 0) ? "," : "");
-			sql.append(colName);
-			if (colName.equals("office_id")){
-				officeid_i = i;
-			}
-			bindArgs.add(i++, values.get(colName));
+			sql.append(ColList.get(i));
 		}
 		sql.append(')');
 		sql.append(" VALUES (");
-		for (i = 0; i < size; i++) {
+		sql.append("?,");
+		for (i = 0; i < ColList.size(); i++) {
 			sql.append((i > 0) ? ",?" : "?");
 		}
 		sql.append(')');
-		return officeid_i;
 	}
+	
+	private void j_prepareSql_degree(StringBuilder sql_d) {
+		sql_d.append("INSERT");
+		sql_d.append(" INTO ");
+		sql_d.append("j_degree");
+		sql_d.append('(');
+		sql_d.append("table_name,");
+		sql_d.append("office_id,");
+		sql_d.append("latitude,");
+		sql_d.append("longitude");
+		sql_d.append(')');
+		sql_d.append(" VALUES (");
+		sql_d.append("?,");
+		sql_d.append("?,");
+		sql_d.append("?,");
+		sql_d.append("?");
+		sql_d.append(')');
+	}	
 	
 	public int delete(String sql){
 		PreparedStatement ps = null;
