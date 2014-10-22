@@ -12,7 +12,7 @@ No,項目名,型,長さ,少数,必須,PK,備考,diffid,
 8,address_2,TEXT,,,,,住所２,179,.innerHTML
 9,tel,TEXT,,,,,電話番号,180,.innerHTML
 10,fax,TEXT,,,,,FAX番号,181,.innerHTML
-11,hp_address,TEXT,,,,,ホームページ,183,".attr(""href"")"
+11,hp_address,TEXT,,,,,ホームページ,183,.innerHTML
 12,office_no,TEXT,,,,,介護保険事業所番号,187,.innerHTML
 13,manager_name,TEXT,,,,,事業所の管理者の氏名,194,.innerHTML
 14,founding_day,TEXT,,,,,事業の開始（予定）年月日,196,.innerHTML
