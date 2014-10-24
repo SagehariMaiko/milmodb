@@ -49,7 +49,7 @@ public class Converter {
 	public static String conv1(String Key, Map<String, String> d ){
 		String str = d.get(Key);
 		if ( str != null) {
-			str = Nomaliz(str);
+			str = Normalize(str);
 			switch (Key){
 			case ColumnNames.POSTCODE:
 				str = str.replaceAll("〒", "").replaceAll("-", "");
@@ -90,12 +90,12 @@ public class Converter {
 	public static String replaceNin(String Key, Map<String, String> d) {
 		String str = d.get(Key);
 		if ( str != null) {
-			str = Nomaliz(str).replaceAll("人", "");
+			str = Normalize(str).replaceAll("人", "");
 		}
 		return str;
 	}
 	
-	public static String Nomaliz(String s){
+	public static String Normalize(String s){
 		String str = Normalizer.normalize(s, Form.NFKC);
 		return str;
 	}
