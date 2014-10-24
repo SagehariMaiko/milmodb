@@ -30,18 +30,16 @@ public class CreateJsonDB {
 			String logDir = projectFolder + "log";
 			Env env = new Env(JsonDir, CSVDir, logDir, today, 1);
 			db = new DB();
-			
-			List<Map<String, String>> tablelist = Dao.selectData(db);
-			String table = "j_degree";
-			int delRow = Dao.datadeleteAll(db,table);
-			System.out.println(String.format(">> %s テーブルを　%s 行削除しました",table,delRow));
+			String table = "service_name";
+			List<Map<String, String>> tablelist = Dao.selectData(db, table);
+			table = "j_degree";
+			Dao.datadeleteAll(db,table);
 			
 			for (File data : env.data1s){
 				String filename = data.getName().toString().replace(".json", "");
 				table = gettablename(tablelist,filename);
 				table = "j_" + table;
-				delRow = Dao.datadeleteAll(db,table);
-				System.out.println(String.format(">> %s テーブルを　%s 行削除しました",table,delRow));
+				Dao.datadeleteAll(db,table);
 				for (File csv : env.data2s){
 					String csvname = csv.getName().toString().replaceAll(".csv","");
 					if (filename.equals(csvname)) {

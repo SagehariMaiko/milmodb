@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+import util.common.ColumnNames;
+
+import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
+
 public class DB {
 	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private static final String URL_FORMAT = "jdbc:sqlserver://%s:%s;database=%s";
@@ -65,7 +69,6 @@ public class DB {
 			j_prepareSql_degree(sql_d);
 			ps = con.prepareStatement(sql.toString());
 			ps_d = con.prepareStatement(sql_d.toString());
-			System.out.println(sql_d.toString());
 			insertExecute(ps, ps_d, table, ColList, offices);
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
@@ -89,7 +92,6 @@ public class DB {
 			ps.setInt(1, office_id);
 			for ( int i = 0; i < ColList.size(); ++i ) {
 				String str = c.get(ColList.get(i));
-				
 				ps.setString(i + 2, str);
 			}
 			
@@ -103,7 +105,6 @@ public class DB {
 			
 			office_id++;
 		}
-
 	}
 
 	private void j_prepareSql(StringBuilder sql, List<String> ColList, String table) {
@@ -127,6 +128,50 @@ public class DB {
 		sql.append(')');
 	}
 	
+	void updatevalidate(String table, List<Map<String,String>> offices) {
+		PreparedStatement ps = null;
+		//PreparedStatement ps_d = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			//StringBuilder sql_d = new StringBuilder();
+			j_updateSql(sql, table);
+			//j_prepareSql_degree(sql_d);
+			ps = con.prepareStatement(sql.toString());
+			//ps_d = con.prepareStatement(sql_d.toString());
+			updateExecute(ps, table, offices);
+		} catch (SQLException e) {
+			throw new IllegalStateException(e);
+		} finally {
+			if (ps != null) {
+				try {
+					System.out.println(">> ps Close");
+					ps.close();
+				} catch (SQLException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+		}
+	}
+	
+	private void updateExecute(PreparedStatement ps, String table, List<Map<String,String>> offices) throws SQLException {
+		for (Map<String,String> c : offices) {
+			ps.setBoolean(1, Boolean.valueOf(c.get(ColumnNames.IVALIDATE_FLG)));
+			ps.setInt(2, Integer.valueOf(c.get(ColumnNames.OFFICE_ID)));		
+			ps.execute();
+		}
+	}
+	
+	private void j_updateSql(StringBuilder sql, String table) {
+		sql.append(" UPDATE ");
+		sql.append(table);
+		sql.append(" SET ");
+		sql.append(ColumnNames.IVALIDATE_FLG);
+		sql.append(" = ? ");
+		sql.append(" WHERE ");
+		sql.append(ColumnNames.OFFICE_ID);
+		sql.append(" = ? ");
+	}
+	
 	private void j_prepareSql_degree(StringBuilder sql_d) {
 		sql_d.append("INSERT");
 		sql_d.append(" INTO ");
@@ -145,12 +190,12 @@ public class DB {
 		sql_d.append(')');
 	}	
 	
-	public int delete(String sql){
+	public void delete(String sql){
 		PreparedStatement ps = null;
 		try {
 			ps = this.con.prepareStatement(sql);
-			int delRow = ps.executeUpdate();
-			return delRow;
+			//int delRow = ps.executeUpdate();
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -163,6 +208,25 @@ public class DB {
 				//Logger.error(e, "result setのclose中にエラーが発生しました。");
 			}
 			
+		}
+	}
+	
+	public boolean exist_table(String stadName, String table){
+		CallableStatement cstmt = null;
+		boolean b = false;
+		try {
+			cstmt = con.prepareCall(String.format("{CALL %S( ?, ? )}",stadName));
+			cstmt.setString(1, table);
+			cstmt.registerOutParameter(2, Types.INTEGER);
+			cstmt.execute();
+			if (cstmt.getInt(2) == 1 ){
+				b = true;
+			} 
+			return b;
+		} catch (SQLException e) {
+			throw new IllegalStateException(e);
+		} finally {
+			cstmtClose(cstmt);
 		}
 	}
 	
@@ -200,7 +264,7 @@ public class DB {
 		if (rset != null) {
 			try {
 				rset.close();
-				System.out.println("rset Close");
+				//System.out.println("rset Close");
 			} catch (SQLException e) {
 				//Logger.error(e, "resultsetのクローズに失敗しました。");
 			}
@@ -208,9 +272,20 @@ public class DB {
 		if (stmt != null) {
 			try {
 				stmt.close();
-				System.out.println("stmt Close");
+				//System.out.println("stmt Close");
 			} catch (SQLException e) {
 				//Logger.error(e, "preparedstatementのクローズに失敗しました。");
+			}
+		}
+	}
+	
+	private void cstmtClose(CallableStatement cstmt) {
+		if (cstmt != null) {
+			try {
+				cstmt.close();
+				//System.out.println("ctmt Close");
+			} catch (SQLException e) {
+				
 			}
 		}
 	}
