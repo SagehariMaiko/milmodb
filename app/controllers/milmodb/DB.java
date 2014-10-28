@@ -61,15 +61,11 @@ public class DB {
 
 	void insert(String table, List<String> ColList, List<Map<String,String>> offices) {
 		PreparedStatement ps = null;
-		PreparedStatement ps_d = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			StringBuilder sql_d = new StringBuilder();
 			j_prepareSql(sql, ColList, table);
-			j_prepareSql_degree(sql_d);
 			ps = con.prepareStatement(sql.toString());
-			ps_d = con.prepareStatement(sql_d.toString());
-			insertExecute(ps, ps_d, table, ColList, offices);
+			insertExecute(ps, table, ColList, offices);
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
 		} finally {
@@ -77,31 +73,29 @@ public class DB {
 				try {
 					System.out.println(">> ps Close");
 					ps.close();
-					ps_d.close();
 				} catch (SQLException e) {
-					throw new IllegalStateException(e);
+					//throw new IllegalStateException(e);
+					e.printStackTrace();
 				}
 			}
 		}
 	}
 	
 	
-	private void insertExecute(PreparedStatement ps, PreparedStatement ps_d, String table, List<String> ColList, List<Map<String,String>> offices) throws SQLException {
+	private void insertExecute(PreparedStatement ps, String table, List<String> ColList, List<Map<String,String>> offices) throws SQLException {
 		int office_id = 0;
 		for (Map<String,String> c : offices) {
 			ps.setInt(1, office_id);
 			for ( int i = 0; i < ColList.size(); ++i ) {
-				String str = c.get(ColList.get(i));
-				ps.setString(i + 2, str);
+				if (ColList.get(i).equals(ColumnNames.OFFICE_ID)){
+					ps.setInt(i + 1, office_id);
+				} else {
+					String str = c.get(ColList.get(i));
+					ps.setString(i + 1, str);
+				}
 			}
 			
-			ps_d.setString(1, table);
-			ps_d.setInt(2, office_id);
-			ps_d.setString(3, c.get("latitude"));
-			ps_d.setString(4, c.get("longitude"));
-			
 			ps.execute();
-			ps_d.execute();
 			
 			office_id++;
 		}
@@ -114,14 +108,12 @@ public class DB {
 		sql.append('(');
 
 		int i = 0;
-		sql.append("office_id,");
 		for (i = 0; i < ColList.size(); ++i) {
 			sql.append((i > 0) ? "," : "");
 			sql.append(ColList.get(i));
 		}
 		sql.append(')');
 		sql.append(" VALUES (");
-		sql.append("?,");
 		for (i = 0; i < ColList.size(); i++) {
 			sql.append((i > 0) ? ",?" : "?");
 		}
@@ -130,14 +122,10 @@ public class DB {
 	
 	void updatevalidate(String table, List<Map<String,String>> offices) {
 		PreparedStatement ps = null;
-		//PreparedStatement ps_d = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			//StringBuilder sql_d = new StringBuilder();
 			j_updateSql(sql, table);
-			//j_prepareSql_degree(sql_d);
 			ps = con.prepareStatement(sql.toString());
-			//ps_d = con.prepareStatement(sql_d.toString());
 			updateExecute(ps, table, offices);
 		} catch (SQLException e) {
 			throw new IllegalStateException(e);
@@ -147,7 +135,8 @@ public class DB {
 					System.out.println(">> ps Close");
 					ps.close();
 				} catch (SQLException e) {
-					throw new IllegalStateException(e);
+					//throw new IllegalStateException(e);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -171,30 +160,11 @@ public class DB {
 		sql.append(ColumnNames.OFFICE_ID);
 		sql.append(" = ? ");
 	}
-	
-	private void j_prepareSql_degree(StringBuilder sql_d) {
-		sql_d.append("INSERT");
-		sql_d.append(" INTO ");
-		sql_d.append("j_degree");
-		sql_d.append('(');
-		sql_d.append("table_name,");
-		sql_d.append("office_id,");
-		sql_d.append("latitude,");
-		sql_d.append("longitude");
-		sql_d.append(')');
-		sql_d.append(" VALUES (");
-		sql_d.append("?,");
-		sql_d.append("?,");
-		sql_d.append("?,");
-		sql_d.append("?");
-		sql_d.append(')');
-	}	
-	
+		
 	public void delete(String sql){
 		PreparedStatement ps = null;
 		try {
 			ps = this.con.prepareStatement(sql);
-			//int delRow = ps.executeUpdate();
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -206,6 +176,7 @@ public class DB {
 				}
 			} catch (SQLException e) {
 				//Logger.error(e, "result setのclose中にエラーが発生しました。");
+				e.printStackTrace();
 			}
 			
 		}
@@ -224,6 +195,7 @@ public class DB {
 			} 
 			return b;
 		} catch (SQLException e) {
+			//e.printStackTrace();
 			throw new IllegalStateException(e);
 		} finally {
 			cstmtClose(cstmt);
@@ -238,12 +210,13 @@ public class DB {
 			rset = stmt.executeQuery(sql);
 			return getData(rset);
 		} catch (SQLException e) {
+			//e.printStackTrace();
 			throw new IllegalStateException(e);
 		} finally {
 			silentClose(rset, stmt);
 		}
 	}
-	
+
 	protected final List<Map<String, String>> getData(ResultSet rset) throws SQLException {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		ResultSetMetaData meta = rset.getMetaData();
@@ -267,6 +240,7 @@ public class DB {
 				//System.out.println("rset Close");
 			} catch (SQLException e) {
 				//Logger.error(e, "resultsetのクローズに失敗しました。");
+				e.printStackTrace();
 			}
 		}
 		if (stmt != null) {
@@ -275,17 +249,18 @@ public class DB {
 				//System.out.println("stmt Close");
 			} catch (SQLException e) {
 				//Logger.error(e, "preparedstatementのクローズに失敗しました。");
+				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	private void cstmtClose(CallableStatement cstmt) {
 		if (cstmt != null) {
 			try {
 				cstmt.close();
 				//System.out.println("ctmt Close");
 			} catch (SQLException e) {
-				
+				e.printStackTrace();
 			}
 		}
 	}

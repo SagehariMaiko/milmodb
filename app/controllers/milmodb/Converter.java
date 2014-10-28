@@ -75,12 +75,9 @@ public class Converter {
 			for ( Map<String, String> d : data){
 				for ( Map<String, String> c : convertlist){
 					String Key = c.get(ColumnNames.COLUMN_NAME);
-					for (int i = 0; i < ColumnNames.JYOUKINSENJYU.length; i++) {
-						String Key_ = Key + ColumnNames.JYOUKINSENJYU[i].toString();
-						if (d.containsKey(Key_)){
-							d.put(Key_, replaceNin(Key_, d));
+						if (d.containsKey(Key)){
+							d.put(Key, replaceNin(Key, d));
 						}						
-					}
 				}
 			}
 			return data;

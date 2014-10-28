@@ -54,15 +54,12 @@ public class HomeCare {
 			List<Map<String, String>> collist = Dao.selectData(db, ViewNames.V_PERSONS);
 			for ( Map<String, String> c : collist){
 				String Key = c.get(ColumnNames.COLUMN_NAME);
-				for (int i = 0; i < ColumnNames.JYOUKINSENJYU.length; i++) {
-					String Key_ = Key + ColumnNames.JYOUKINSENJYU[i].toString();
-					if (d.containsKey(Key_)){
-						Matcher m = person.matcher(d.get(Key_));
-						//Logger.write("d.get(Key_) = " + d.get(Key_));
-						if(!m.find()) {
-							Logger.write(String.format(" >>> office_id = %s : < %s > PersonValidater err", d.get(ColumnNames.OFFICE_ID), Key_));
-							b = false;
-						}
+				if (d.containsKey(Key)){
+					Matcher m = person.matcher(d.get(Key));
+					//Logger.write("d.get(Key_) = " + d.get(Key_));
+					if(!m.find()) {
+						Logger.write(String.format(" >>> office_id = %s : < %s > PersonValidater err", d.get(ColumnNames.OFFICE_ID), Key));
+						b = false;
 					}
 				}
 			}

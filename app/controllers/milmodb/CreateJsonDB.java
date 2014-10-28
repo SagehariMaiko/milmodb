@@ -4,6 +4,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import util.common.ColumnNames;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,24 +28,22 @@ public class CreateJsonDB {
 		DB db = null;
 		try {
 			String JsonDir = projectFolder + "Json";
-			String CSVDir = projectFolder + "CSV";
+			String CSVDir = projectFolder + "csv";
 			String logDir = projectFolder + "log";
 			Env env = new Env(JsonDir, CSVDir, logDir, today, 1);
 			db = new DB();
-			String table = "service_name";
-			List<Map<String, String>> tablelist = Dao.selectData(db, table);
-			table = "j_degree";
-			Dao.datadeleteAll(db,table);
+			String m_table = "m_service_name";
+			List<Map<String, String>> tablelist = Dao.selectData(db, m_table);
 			
 			for (File data : env.data1s){
 				String filename = data.getName().toString().replace(".json", "");
-				table = gettablename(tablelist,filename);
-				table = "j_" + table;
-				Dao.datadeleteAll(db,table);
+				String table = gettablename(tablelist,filename);
+				String j_table = "j_" + table;
+				Dao.datadeleteAll(db,j_table);
 				for (File csv : env.data2s){
 					String csvname = csv.getName().toString().replaceAll(".csv","");
 					if (filename.equals(csvname)) {
-						parse(db,data,csv,filename,table);
+						parse(db,data,csv,filename,j_table);
 					}
 				}	
 			}
@@ -78,11 +78,15 @@ public class CreateJsonDB {
 		try{
 			List<Map<String,String>> offices = new ObjectMapper().readValue(data,new TypeReference<List<Map<String,String>>>() {});	
 			in = new BufferedReader(new FileReader(csv));
+			ColList.add(ColumnNames.OFFICE_ID);
+			ColList.add(ColumnNames.SERCVICE_TYPE);
+			ColList.add(ColumnNames.LATITUDE);
+			ColList.add(ColumnNames.LONGITUDE);
 			while ((line = in.readLine()) != null){
 				csvArray = line.split("\\,");
 				countRow++;
-				if(countRow > csvReadStart && csvArray.length >= 10){
-					ColList.add(csvArray[1]);
+				if(countRow > csvReadStart){
+					if (!csvArray[6].toString().equals("-")) {ColList.add(csvArray[6]);}	
 				}
 			}
 			db.insert(table, ColList, offices);

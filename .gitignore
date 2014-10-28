@@ -22,6 +22,7 @@
 
 #for testing
 /test-result
+/test
 
 # for IntelliJ
 .idea/
