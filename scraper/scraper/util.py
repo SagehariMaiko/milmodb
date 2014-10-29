@@ -5,6 +5,7 @@ import requests
 import re
 import scrapy
 from scrapy.item import DictItem, Field
+import codecs
 
 
 def getTextById(tree,id):
@@ -26,6 +27,45 @@ def getAttributeValueById(tree,id,attribute):
             return i.get(attribute)
     return u'データーなし'
 
+
+def readCSVFile(serviceType):
+  f = codecs.open(".\\scraper\\tableDefinitions\\"+serviceType+".csv",'r','utf-8' )
+  results = []
+  for line in f:
+    csvArray = line.split(",")
+    if csvArray[0] == "jigyosho jigyoshoShosai shosai" and not csvArray[4] =='-':
+      div_id=csvArray[1]
+      abbr= csvArray[3]
+      th_abbr= csvArray[4]
+      td = csvArray[5]
+      columnName = csvArray[6]
+      results.append((div_id,abbr,th_abbr,td,columnName))
+  return results 
+
+
+
+def getDataValue(tree,div_id,abbr,th_abbr,td):
+  print "######" + abbr
+  items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")
+  if len(items)==1: ##Found a unique match
+    item = items[0]
+    if not th_abbr=="":
+        return item.findNext(abbr=th_abbr).findNextSibling().text
+    elif td[0].isdigit():
+      for a in range(int(td[0])):
+        item = item.findNextSibling()
+      if "alt" in td:
+        return item.img.get("alt") ## １番目のalt
+      else:
+        return item.text  ## １番目の
+
+    else:##次のtrの１番目
+      item = item.parent
+      for a in range(int(td[5])):
+        item = item.findNextSibling()
+      return item.text
+  else:
+    return u"データーなし"
 
 def create_item_class(class_name, field_list):
     field_dict = {}
