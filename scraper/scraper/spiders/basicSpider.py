@@ -16,8 +16,6 @@ class BasicSpider(CrawlSpider):
     settings = get_project_settings()
     name = "basicSpider"
     allowed_domains = ["kaigokensaku.jp"]
-    #start_urls = ("""http://www.kaigokensaku.jp/40/index.php?action_kouhyou_detail_2014_001_kihon=true&JigyosyoCd=4074000029-00&PrefCd=40&VersionCd=001""",)    
-    start_urls = ("""http://www.kaigokensaku.jp/40/index.php?action_kouhyou_detail_2014_001_kani=true&JigyosyoCd=4074000029-00&PrefCd=40&VersionCd=001""",)
     def __init__(self,serviceType=None):
         self.start_urls = getStartUrls(int(serviceType))
         self.columns= readCSVFile(serviceType)
@@ -26,7 +24,7 @@ class BasicSpider(CrawlSpider):
         tree = BeautifulSoup(response.body)
         item = GenericItem()
 
-        regex = re.compile(r"""action_kouhyou_detail_([0-9]+)_([0-9]+)_kani=true\&JigyosyoCd=([0-9\-]+)\&PrefCd=([0-9]+)\&VersionCd=([0-9]+)""")
+        regex = re.compile(r"""action_kouhyou_detail_([0-9]+)_([0-9]+)_kihon=true\&JigyosyoCd=([0-9\-]+)\&PrefCd=([0-9]+)\&VersionCd=([0-9]+)""")
         [details] = regex.findall(response.url)
         (year,versionCd1,jigyosyoCd,pref,versionCd2) = details
 

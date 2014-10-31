@@ -7,27 +7,6 @@ import scrapy
 from scrapy.item import DictItem, Field
 import codecs
 
-
-def getTextById(tree,id):
-    idString = "diff-c" + str(id)
-    field = tree.find(diffid=idString)
-    if field:
-        return field.text 
-
-def getAttributeValueById(tree,id,attribute):
-    idString = "diff-c" + str(id)
-    field = tree.find(diffid=idString)
-    if field:
-      value = field.get(attribute)
-      if value:
-        return value
-      else:
-        for i in field.descendants:
-          if "get" in dir(i):
-            return i.get(attribute)
-    return u'データーなし'
-
-
 def readCSVFile(serviceType):
   f = codecs.open(".\\scraper\\tableDefinitions\\"+serviceType+".csv",'r','utf-8' )
   results = []
@@ -42,50 +21,32 @@ def readCSVFile(serviceType):
       results.append((div_id,abbr,th_abbr,td,columnName))
   return results 
 
-
-
 def getDataValue(tree,div_id,abbr,th_abbr,td):
-  print "######" + abbr
   items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")
-  if len(items)==1: ##Found a unique match
+  
+  if len(items)==1 or (len(items)==1 and th_abbr != ""): ##Found a unique match
     item = items[0]
-    if not th_abbr=="":
-        return item.findNext(abbr=th_abbr).findNextSibling().text
-    elif td[0].isdigit():
-      for a in range(int(td[0])):
-        item = item.findNextSibling()
-      if "alt" in td:
-        return item.img.get("alt") ## １番目のalt
-      else:
-        return item.text  ## １番目の
-
-    else:##次のtrの１番目
-      item = item.parent
-      for a in range(int(td[5])):
-        item = item.findNextSibling()
-      return item.text
+  elif len(items)>=2:
+    item = items[1]
   else:
-    return u"データーなし"
+    return u"データーなし"  #no matches
+  
+  
+  if not th_abbr=="":
+      return item.findNext(abbr=th_abbr).findNextSibling().text
+  elif td[0].isdigit():
+    for a in range(int(td[0])):
+      item = item.findNextSibling()
+    selectedItem=item
+  else:##次のtrの１番目
+    children = item.parent.findNextSibling("tr").findAll("td")
+    selectedItem = children[int(td[5])-1]
+    
 
-def create_item_class(class_name, field_list):
-    field_dict = {}
-    for field_name in field_list:
-        field_dict[field_name] = Field()
-    print field_dict
-
-    return type(class_name, (DictItem,), field_dict)
-
-
-def getColumnNamesFromCSV(path):
-  result = []
-  f = file(path)
-  for line in f:
-    csvArray = line.split(",")
-    if(csvArray[0].isdigit()):
-      result.append(csvArray[1])
-  f.close()
-  return result
-
+  if "alt" in td:
+    return selectedItem.img.get("alt") ## １番目のalt
+  else:
+    return selectedItem.text  ## １番目の
 
 def getStartUrls(facilityType):
     results =[]
