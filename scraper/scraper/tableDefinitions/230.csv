@@ -13,7 +13,7 @@ jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（都道府県から番�
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（建物名・部屋番号等）,,1番目,address_2,住所２,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,電話番号,,1番目,tel,電話番号,NVARCHAR,11
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,FAX番号,,1番目,fax,FAX番号,NVARCHAR,11
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,30
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,70
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,介護保険事業所番号,,1番目,office_no,介護保険事業所番号,NVARCHAR,10
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,氏名,,1番目,manager_name,事業所の管理者の氏名,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業の開始（予定）年月日,,1番目,founding_day,事業の開始（予定）年月日,NVARCHAR,8
@@ -42,7 +42,7 @@ jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,ユニット型準個室,,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,従来型個室,,次のtrの1番目のtd,existingroom,従来型個室,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,多床室,,次のtrの2番目のtd,multibedroom,多床室,BIT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,食事の提供に要する費用の額及びその算定方法,,次のtrの1番目のtd,meal_price,食事の提供に要する費用の額及びその算定方法,TEXT,
-jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,滞在に要する費用の額及びその算定方法,,次のtrの1番目のtd,stay_price,滞在に要する費用の額及びその算定方法,TEXT,
+jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,滞在に要する費用の額及びその算定方法,,次のtrの1番目のtd,stay_price_2,滞在に要する費用の額及びその算定方法,TEXT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,利用者が選定する特別な病室等の提供を行ったことに伴い必要となる費用の額及びその算定方法,,次のtrの1番目のtd,special_sickroom_price,利用者が選定する特別な病室等の提供を行ったことに伴い必要となる費用の額及びその算定方法,TEXT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,利用者が選定する特別な食事の提供を行ったことに伴い必要となる費用の額及びその算定方法,,次のtrの1番目のtd,special_meal_price,利用者が選定する特別な食事の提供を行ったことに伴い必要となる費用の額及びその算定方法,TEXT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,理美容代及びその算定方法,,次のtrの1番目のtd,hairdressing_price,理美容代及びその算定方法,TEXT,

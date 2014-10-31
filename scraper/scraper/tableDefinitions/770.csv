@@ -13,7 +13,7 @@ jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（都道府県から番�
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（建物名・部屋番号等）,,1番目,address_2,住所２,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,電話番号,,1番目,tel,電話番号,NVARCHAR,11
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,FAX番号,,1番目,fax,FAX番号,NVARCHAR,11
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,30
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,70
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,介護保険事業所番号,,1番目,office_no,介護保険事業所番号,NVARCHAR,10
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,氏名,,1番目,manager_name,事業所の管理者の氏名,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業の開始（予定）年月日,,1番目,founding_day,事業の開始（予定）年月日,NVARCHAR,8
@@ -59,7 +59,7 @@ jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,宿泊費,,2番目,stay_pr
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,①その他,,1番目,other_name_1,１名称,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,①その他,,3番目,other_price_1,１その額,INT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,①その他,,次のtrの1番目のtd,other_biko_1,１算定方法,TEXT,
-jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,②その他,,1番目,other__name_2,２名称,NVARCHAR,20
+jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,②その他,,1番目,other_name_2,２名称,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,②その他,,3番目,other_price_2,２その額,INT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,②その他,,次のtrの1番目のtd,other_biko_2,２算定方法,TEXT,
 jigyosho jigyoshoShosai shosai,tab-5,jigyosho-ichiran,③その他,,1番目,other_name_3,３名称,NVARCHAR,20

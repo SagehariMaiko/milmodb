@@ -3,7 +3,7 @@
 テーブル名,care_welfare_facility,,,,,,,,
 CSV番号,510,,,,,SQLserverでも使用,,SQLserver用,
 div class,div id,table class,th abbr,th abbr,td,column_name,memo,型,長さ
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業所の名称,,次のtrの1番目のtd,name,事業所名称,NVARCHAR,50
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,施設の名称,,次のtrの1番目のtd,name,事業所名称,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,(ふりがな),,1番目,name_furi,事業所ふりがな,NVARCHAR,100
 jigyosho jigyoshoShosai shosai,tab-1,jigyosho-ichiran,法人等の種類,,1番目,company_type,法人の種類,NVARCHAR,25
 jigyosho jigyoshoShosai shosai,tab-1,jigyosho-ichiran,名称,,次のtrの1番目のtd,company,法人名称,NVARCHAR,100
@@ -13,11 +13,11 @@ jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（都道府県から番�
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（建物名・部屋番号等）,,1番目,address_2,住所２,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,電話番号,,1番目,tel,電話番号,NVARCHAR,11
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,FAX番号,,1番目,fax,FAX番号,NVARCHAR,11
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,30
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,70
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,介護保険事業所番号,,1番目,office_no,介護保険事業所番号,NVARCHAR,10
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,氏名,,1番目,manager_name,事業所の管理者の氏名,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業の開始（予定）年月日,,1番目,founding_day,事業の開始（予定）年月日,NVARCHAR,8
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業所までの主な利用交通手段,,次のtrの1番目のtd,traffic,事業所までの主な利用交通手段,TEXT,
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,施設までの主な利用交通手段,,次のtrの1番目のtd,traffic,事業所までの主な利用交通手段,TEXT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,日常生活継続支援加算,,1番目のalt,nitijyokeizoku,日常生活継続支援加算,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,看護体制加算（Ⅰ）,,1番目のalt,kangotaisei_1,看護体制加算（Ⅰ）,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,看護体制加算（Ⅱ）,,1番目のalt,kangotaisei_2,看護体制加算（Ⅱ）,BIT,
