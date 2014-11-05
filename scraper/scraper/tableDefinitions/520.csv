@@ -10,7 +10,7 @@ jigyosho jigyoshoShosai shosai,tab-1,jigyosho-ichiran,名称,,次のtrの1番目
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業所の所在地,,1番目,postcode,郵便番号,NVARCHAR,7
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,市区町村コード,,1番目,municipality,市区町村コード,NVARCHAR,20
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（都道府県から番地まで）,,1番目,address_1,住所１,NVARCHAR,100
-jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（建物名・部屋番号等）,,1番目,address_2,住所２,NVARCHAR,50
+jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,（建物名部屋番号等）,,1番目,address_2,住所２,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,電話番号,,1番目,tel,電話番号,NVARCHAR,11
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,FAX番号,,1番目,fax,FAX番号,NVARCHAR,11
 jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,ホームページ,,2番目,hp_address,ホームページ,NVARCHAR,70
@@ -55,7 +55,7 @@ jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,介護職員処遇改善�
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,介護職員処遇改善加算（Ⅲ）,,1番目のalt,carestaffkaizen_3,介護職員処遇改善加算（Ⅲ）,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,入所定員,,1番目,entrance_capacity,入所定員,INT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,介護老人保健施設,,1番目,care_health_facility,介護老人保健施設の有無,BIT,
-jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,サテライト型小規模介護老人保健施設(利用定員29以下),,1番目,satellite_small_carehealth,サテライト型小規模介護老人保健施設(利用定員29以下)の有無,BIT,
+jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,サテライト型小規模介護老人保健施設(利用定員29以下) ,,1番目,satellite_small_carehealth,サテライト型小規模介護老人保健施設(利用定員29以下)の有無,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,医療機関併設型小規模介護老人保健施設(利用定員29人以下),,1番目,medical_small_carehealth,医療機関併設型小規模介護老人保健施設(利用定員29人以下)の有無,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,ユニット型個室,,次のtrの1番目のtd,unit_privateroom,ユニット型個室,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,ユニット型準個室,,次のtrの2番目のtd,unit_semi_privateroom,ユニット型準個室,BIT,

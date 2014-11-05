@@ -1,4 +1,4 @@
-検索条件,サービスの種類,,,,,,,,
+検索条件,サービスの種類,,福岡市：該当データなし,,,,,,
 ,複合型サービス,,,,,,,,
 テーブル名,mix_service,,,,,,,,
 CSV番号,770,,,,,SQLserverでも使用,,SQLserver用,
@@ -21,7 +21,7 @@ jigyosho jigyoshoShosai shosai,tab-2,jigyosho-ichiran,事業所までの主な�
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,事業所の営業時間,-,-,-,-,-,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,事業所の営業時間,通いサービス,1番目,office_time_kayoi,営業時間（通いサービス）,NVARCHAR,50
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,事業所の営業時間,宿泊サービス,1番目,office_time_stay,営業時間（宿泊サービス）,NVARCHAR,50
-jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,事業所が通常時に介護サービスを提供する地域,,1番目,service_area,事業所が通常時に介護サービスを提供する地域,TEXT,
+jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,事業所が通常時に介護サービスを提供する地域,,次のtrの1番目のtd,service_area,事業所が通常時に介護サービスを提供する地域,TEXT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,利用者の送迎の実施,,1番目のalt,sougei_1,利用者の送迎の実施,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,認知症加算（Ⅰ）,,1番目のalt,nintisyo_1,認知症加算（Ⅰ）,BIT,
 jigyosho jigyoshoShosai shosai,tab-4,jigyosho-ichiran,認知症加算（Ⅱ）,,1番目のalt,nintisyo_2,認知症加算（Ⅱ）,BIT,
