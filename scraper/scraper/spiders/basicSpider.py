@@ -24,7 +24,7 @@ class BasicSpider(CrawlSpider):
         tree = BeautifulSoup(response.body)
         item = GenericItem()
 
-        regex = re.compile(r"""action_kouhyou_detail_([0-9]+)_([0-9]+)_kihon=true\&JigyosyoCd=([0-9\-]+)\&PrefCd=([0-9]+)\&VersionCd=([0-9]+)""")
+        regex = re.compile(r"""action_kouhyou_detail_([0-9]+)_([0-9]+)_kani=true\&JigyosyoCd=([0-9\-]+)\&PrefCd=([0-9]+)\&VersionCd=([0-9]+)""")
         [details] = regex.findall(response.url)
         (year,versionCd1,jigyosyoCd,pref,versionCd2) = details
 
