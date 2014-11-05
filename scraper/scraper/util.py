@@ -22,9 +22,10 @@ def readCSVFile(serviceType):
   return results 
 
 def getDataValue(tree,div_id,abbr,th_abbr,td):
-  items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")
+  #items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")
+  items = tree.find('div',id=div_id).findAll(abbr=abbr)
   
-  if len(items)==1 or (len(items)==1 and th_abbr != ""): ##Found a unique match
+  if len(items)==1 or (th_abbr != ""): ##Found a unique match
     item = items[0]
   elif len(items)>=2:
     item = items[1]
@@ -32,14 +33,17 @@ def getDataValue(tree,div_id,abbr,th_abbr,td):
     return u"データーなし"  #no matches
   
   
-  if not th_abbr=="":
-      return item.findNext(abbr=th_abbr).findNextSibling().text
-  elif td[0].isdigit():
+  if not th_abbr=="": 
+    selectedItem = item.findNext(abbr=th_abbr)
+  else:
+    selectedItem = item
+
+
+  if td[0].isdigit():
     for a in range(int(td[0])):
-      item = item.findNextSibling()
-    selectedItem=item
+      selectedItem = selectedItem.findNextSibling("td")
   else:##次のtrの１番目
-    children = item.parent.findNextSibling("tr").findAll("td")
+    children = selectedItem.parent.findNextSibling("tr").findAll("td")
     selectedItem = children[int(td[5])-1]
     
 
