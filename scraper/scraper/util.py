@@ -22,13 +22,11 @@ def readCSVFile(serviceType):
   return results 
 
 def getDataValue(tree,div_id,abbr,th_abbr,td):
-  #items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")
+  #items = tree.find('div',id=div_id).select(u"[abbr^="+abbr+"]")p
   items = tree.find('div',id=div_id).findAll(abbr=abbr)
   
-  if len(items)==1 or (th_abbr != ""): ##Found a unique match
+  if len(items)>=1 or (th_abbr != ""):
     item = items[0]
-  elif len(items)>=2:
-    item = items[1]
   else:
     return u"データーなし"  #no matches
   
@@ -75,11 +73,11 @@ def getStartUrls(facilityType):
                           data=payload)
 
             regex = re.compile(r"""\'url\'\:\'index.php\?action_kouhyou_detail_([0-9]+)_([0-9]+)_kani=true\&amp\;JigyosyoCd=(.*?)\&amp\;PrefCd=40&amp\;VersionCd=([0-9]+)""")
-
-            if not regex.findall(page.text): ## End of search results
+            matches = regex.findall(page.text)
+            if not matches: ## End of search results
                 break
 
-            for regexMatch in regex.findall(page.text):
+            for regexMatch in matches:
                 (year,versionCd1,jigyosyoCd,versionCd2) = regexMatch
                 url = "http://www.kaigokensaku.jp/40/index.php?action_kouhyou_detail_"+year+"_"+versionCd1+"_kani=true&JigyosyoCd="+jigyosyoCd+"&PrefCd=40&VersionCd="+versionCd2
                 results.append(url)
