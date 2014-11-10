@@ -1,0 +1,8 @@
+sendserver=zmc987ph20.database.windows.net
+dbport=1433
+dbname=milmodb
+dbuser=welmo@zmc987ph20
+dbpass=we11Motion
+
+jsonpath=data/Json
+logpath=logs

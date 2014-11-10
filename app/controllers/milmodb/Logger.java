@@ -1,6 +1,8 @@
 package controllers.milmodb;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Logger {
 	private static PrintWriter pw = null;
@@ -26,7 +28,8 @@ public class Logger {
 	}
 	
 	public static void write(String line) {
-		pw.println(line);
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
+		pw.println(String.format(">>> %s : %s",df.format(new Date()), line));
 		pw.flush();
 	}
 

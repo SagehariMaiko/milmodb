@@ -1,0 +1,2 @@
+[config]
+command = cp %DEPLOYMENT_SOURCE%/target/target.war %DEPLOYMENT_TARGET%/bin/jetty-distribution-9.1.2.v20140210/webapps/ROOT.war
