@@ -43,7 +43,7 @@ public class Env {
 	public static File find(String p) {
 		File f = new File(p);
 		if (!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
 			//throw new IllegalArgumentException("指定された'" + p + "'フォルダが見つかりません。");
 		}
 		if (f.isFile()) {
