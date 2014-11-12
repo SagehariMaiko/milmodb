@@ -33,33 +33,50 @@ public class CreateValidateDB {
 			db = new DB(env.globalSetting);
 			
 			List<Map<String, String>> tablelist = Dao.selectData(db, ViewNames.V_SERVICE_NAME);
+			List<Map<String, String>> comColListMap = Dao.selectData(db,StoredProcedureNames.F_GETCOLUMNDATA + "('" + TableNames.OFFICE_COMMON + "')");
+			List<String> comColList = new ArrayList<String>();
+			CreateColList.CreateCol(comColListMap, comColList);
 			
 			for (Map<String, String> table : tablelist){
 				String tablename = table.get(ColumnNames.TABLE_NAME);
 				String servicetype = table.get(ColumnNames.SERVICE_NAME);
+				String formSerCd = table.get(ColumnNames.FORMSERCD);
 				String j_tablename = "j_" + tablename;
 				String v_tablename = "v_" + tablename;
 				boolean jexist = db.exist_table(StoredProcedureNames.S_EXISTTABLE, j_tablename);
 				boolean vexist = db.exist_table(StoredProcedureNames.S_EXISTTABLE, v_tablename);
+				
 				if (jexist && vexist) {
 					Logger.write("Start -> " + v_tablename);
 					List<Map<String, String>> datalist = Dao.selectData(db, j_tablename);
-					List<Map<String, String>> columnlist = Dao.selectData(db,StoredProcedureNames.F_GETCOLUMNDATA + "('" + v_tablename + "')");
+					List<Map<String, String>> v_ColListMap = Dao.selectData(db,StoredProcedureNames.F_GETCOLUMNDATA + "('" + v_tablename + "')");
 					
-					Converter conv = new Converter(datalist,columnlist);
+					Converter conv = new Converter(datalist,v_ColListMap);
 					List<Map<String, String>> newdata = conv.isCovert();
 					
-					Validater valid = new Validater(newdata,columnlist, servicetype);
+					Validater valid = new Validater(newdata,v_ColListMap, servicetype);
 					newdata = valid.isValid();
 
 					Dao.datadeleteAll(db, v_tablename);
-					List<String> ColList = new ArrayList<String>();
-					CreateColList.CreateCol(columnlist, ColList);
-					db.v_insert(v_tablename, ColList, newdata, columnlist);
+					List<String> v_ColList = new ArrayList<String>();
+					CreateColList.CreateCol(v_ColListMap, v_ColList);
+					db.v_insert(v_tablename, v_ColList, newdata, v_ColListMap);
 					Logger.write("End   -> " + v_tablename);
+					
+					db.common_insert(formSerCd, comColList, newdata, comColListMap);
+					Logger.write("End   -> office_common (" + tablename + ")");
+					
+					List<Map<String, String>> uniColListMap = Dao.selectData(db,StoredProcedureNames.F_GETCOLUMNDATA + "('" + tablename + "')");
+					List<String> uniColList = new ArrayList<String>();
+					CreateColList.CreateCol(uniColListMap, uniColList);
+					db.unique_insert(tablename, uniColList, newdata, uniColListMap);
+					Logger.write("End   -> " + tablename);
+					
+					
 				} else {
 					Logger.write(j_tablename + " 及び " + v_tablename + " が存在しません");
 				}
+				//if (tablename.equals("home_care")) {break;}
 			}
 										
 			db.commit();

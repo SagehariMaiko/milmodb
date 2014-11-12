@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import util.common.ColumnNames;
+import util.common.*;
 
 public class Validater {
 	public static List<Map<String, String>> datalist;

@@ -14,9 +14,6 @@ public class Converter {
 	
 	public static final String strEn = "円";
 	public static final String strNin = "人";
-	//public static final String strAri = "あり";
-	//public static final String strNashi = "なし";
-	//public static final String strTaisyoNashi = "対象なし";
 	public static final String strhour = "時";
 	public static final String strminute = "分";
 	public static final String[] repostcode = {"〒","-","?"};
