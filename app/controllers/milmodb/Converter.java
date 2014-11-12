@@ -14,9 +14,9 @@ public class Converter {
 	
 	public static final String strEn = "円";
 	public static final String strNin = "人";
-	public static final String strAri = "あり";
-	public static final String strNashi = "なし";
-	public static final String strTaisyoNashi = "対象なし";
+	//public static final String strAri = "あり";
+	//public static final String strNashi = "なし";
+	//public static final String strTaisyoNashi = "対象なし";
 	public static final String strhour = "時";
 	public static final String strminute = "分";
 	public static final String[] repostcode = {"〒","-","?"};
@@ -40,9 +40,6 @@ public class Converter {
 						break;
 					case "B":
 						NormalizeConverter(newdatalist,c.get(ColumnNames.COLUMN_NAME));
-						break;
-					case "C":
-						YesNoConverter(newdatalist,c.get(ColumnNames.COLUMN_NAME));
 						break;
 					case "D":
 						PersonConverter(newdatalist,c.get(ColumnNames.COLUMN_NAME));
@@ -71,13 +68,7 @@ public class Converter {
 			d.put(column_name, Normalize(d.get(column_name)));
 		}
 	}
-	
-	public static void YesNoConverter(List<Map<String, String>>newdatalist, String column_name){
-		for ( Map<String, String> d : datalist){
-			d.put(column_name, func_bit(d.get(column_name)));
-		}
-	}
-	
+		
 	public static void PersonConverter(List<Map<String, String>>newdatalist, String column_name){
 		for ( Map<String, String> d : datalist){
 			d.put(column_name, replaceNin(d.get(column_name)));
@@ -116,29 +107,6 @@ public class Converter {
 		String rVal = null;
 		if ( Val != null) {
 			rVal = ConvertTime(Val);
-		}
-		return rVal;
-	}
-	
-	
-	
-	public static String func_bit(String Val) {
-		String rVal = null;
-		if (Val != null) {
-			switch (Val){
-				case "null":
-				case strTaisyoNashi:
-					rVal = null;
-					break;
-				case strAri:
-					rVal = "true";
-					break;
-				case strNashi:
-					rVal = "false";
-					break;
-				default:
-					rVal = Val;
-			}			
 		}
 		return rVal;
 	}

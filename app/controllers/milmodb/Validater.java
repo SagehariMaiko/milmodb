@@ -27,6 +27,9 @@ public class Validater {
 	public static final String Question = "?";
 	public static final String DataNothing = "データーなし";
 	public static final String CautionTime = "00時00分～00時00分";
+	public static final String strAri = "あり";
+	public static final String strNashi = "なし";
+	public static final String strTaisyoNashi = "対象なし";
 	
 	public Validater(List<Map<String, String>> datalist, List<Map<String, String>> columnlist, String servicetype) {
 		super();
@@ -133,7 +136,7 @@ public class Validater {
 	}	
 	
 	public static boolean func_boolean(String Val) {
-		if (Val == null || "true".equals(Val) || "false".equals(Val)) {
+		if (strTaisyoNashi.equals(Val) || strAri.equals(Val) || strNashi.equals(Val)) {
 			return true;
 		} else {
 			return false;
