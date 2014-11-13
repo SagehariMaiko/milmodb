@@ -23,5 +23,17 @@ public class Dao {
 		db.delete(sbDel.toString());
 	}
 	
+	public static void datadelete(DB db, String table, String Col, String Val) throws SQLException {
+		StringBuilder sbDel = new StringBuilder();
+		sbDel.append("DELETE");
+		sbDel.append(" FROM ");
+		sbDel.append(table);
+		sbDel.append(" WHERE ");
+		sbDel.append(Col);
+		sbDel.append(" = ");
+		sbDel.append("'" + Val + "'");
+		db.delete(sbDel.toString());
+	}
+	
 }	
 
