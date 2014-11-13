@@ -1,14 +1,21 @@
 package controllers.milmodb;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.codehaus.groovy.util.StringUtil;
+
+import com.mysql.jdbc.StringUtils;
 
 import util.common.*;
 
 public class Validater {
 	public static List<Map<String, String>> datalist;
-	public static List<Map<String, String>> columnlist;
+	public static List<Map<String, String>> v_ColListMap;
+	public static List<Map<String, String>> uniColListMap;
+	public static List<Map<String, String>> comColListMap;
 	public static String servicetype;
 	
 	public static final Pattern postcode = Pattern.compile("^\\d{7}$");
@@ -31,16 +38,18 @@ public class Validater {
 	public static final String strNashi = "なし";
 	public static final String strTaisyoNashi = "対象なし";
 	
-	public Validater(List<Map<String, String>> datalist, List<Map<String, String>> columnlist, String servicetype) {
+	public Validater(List<Map<String, String>> datalist, List<Map<String, String>> v_ColListMap, List<Map<String, String>> uniColListMap, List<Map<String, String>> comColListMap, String servicetype) {
 		super();
 		this.datalist = datalist;
-		this.columnlist = columnlist;
+		this.v_ColListMap = v_ColListMap;
+		this.uniColListMap = uniColListMap;
+		this.comColListMap = comColListMap;
 		this.servicetype = servicetype.replace(" ", "").replace("　", "");
 	}
 	
-	public List<Map<String, String>> isValid() {
+	public List<Map<String, String>> isValid() throws NumberFormatException, UnsupportedEncodingException {
 		List<Map<String, String>> newdatalist = this.datalist;
-		for ( Map<String, String> c : columnlist){
+		for ( Map<String, String> c : v_ColListMap){
 			String cv = c.get(ColumnNames.VALID_LIST);
 			for(int i=0;cv != null && i < cv.length();i++){
 				String validtype = String.valueOf(cv.charAt(i));
@@ -96,10 +105,43 @@ public class Validater {
 					case "Q":
 						ServiceNameValidater(newdatalist,c.get(ColumnNames.COLUMN_NAME),validtype);
 						break;
+					case "R":
+						NotNullValidater(newdatalist,c.get(ColumnNames.COLUMN_NAME),validtype);
+						break;
 				}
 			}
 		}
+		
+		GoLengthValidater(newdatalist,comColListMap);
+		GoLengthValidater(newdatalist,uniColListMap);
+
 		return newdatalist;
+	}
+	
+	public static void GoLengthValidater(List<Map<String, String>>newdatalist,List<Map<String, String>>colListMap) throws NumberFormatException, UnsupportedEncodingException{
+		for ( Map<String, String> c : colListMap){
+			String validtype = "LengthOver";
+			if (ColumnNames.NVARCHAR.equals(c.get(ColumnNames.DATATYPE)) && !"-1".equals(c.get(ColumnNames.LENGTH))) {
+				LengthValidater(newdatalist,c.get(ColumnNames.COLUMN_NAME), validtype, c.get(ColumnNames.LENGTH));
+			}
+		}		
+	}
+	
+	public static void LengthValidater(List<Map<String, String>>newdatalist, String Key, String validtype, String length) throws NumberFormatException, UnsupportedEncodingException{
+		String str = null;
+		String newKey = null;
+		for ( Map<String, String> d : datalist){			
+			if (Key.indexOf(DB.strfrom) == 0 &&  Key.indexOf(DB.strtime) > 0) {
+				newKey = Key.replace(DB.strfrom, "");
+				str = (d.get(newKey) != null) ? d.get(newKey).substring(0, 5).replace(Converter.strhour, "") : null;
+			} else if (Key.indexOf(DB.strto) == 0 &&  Key.indexOf(DB.strtime) > 0) {
+				newKey = Key.replace(DB.strto, "");
+				str = (d.get(newKey) != null) ? d.get(newKey).substring(7, 12).replace(Converter.strhour, "") : null;
+			} else {
+				str = (d.get(Key) != null) ? d.get(Key).trim(): null;
+			}
+			putvalidate(d,func_length(str, Integer.valueOf(length)),validtype, Key);
+		}
 	}
 	
 	public static void MatchValidater(List<Map<String, String>>newdatalist, String Key, String validtype, Pattern p){
@@ -120,6 +162,12 @@ public class Validater {
 		}
 	}
 	
+	public static void NotNullValidater(List<Map<String, String>>newdatalist, String Key, String validtype){
+		for ( Map<String, String> d : datalist){
+			putvalidate(d,func_null(d.get(Key)),validtype, Key);
+		}
+	}
+	
 	public static void ServiceNameValidater(List<Map<String, String>>newdatalist, String Key, String validtype){
 		for ( Map<String, String> d : datalist){
 			putvalidate(d,func_servicename(d.get(Key)),validtype, Key);
@@ -133,7 +181,11 @@ public class Validater {
 		} else {
 			return false;
 		}
-	}	
+	}
+	
+	public static boolean func_null(String Val) {
+			return Val != null;
+	}
 	
 	public static boolean func_boolean(String Val) {
 		if (strTaisyoNashi.equals(Val) || strAri.equals(Val) || strNashi.equals(Val)) {
@@ -154,6 +206,14 @@ public class Validater {
 	public static boolean func_Match(String Val, Pattern p) {
 		if (Val != null){
 			return p.matcher(Val).find();
+		} else {
+			return true;
+		}		
+	}
+	
+	public static boolean func_length(String Val, int length) throws UnsupportedEncodingException {
+		if (Val != null){
+			return (length >= Val.getBytes("Shift-JIS").length);
 		} else {
 			return true;
 		}		

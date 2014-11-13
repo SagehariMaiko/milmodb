@@ -48,10 +48,16 @@ public class Converter {
 						TimeConverter(newdatalist,c.get(ColumnNames.COLUMN_NAME));
 						break;
 				}
-
 			}
+			TrimConverter(newdatalist,c.get(ColumnNames.COLUMN_NAME));
 		}
 		return newdatalist;
+	}
+	
+	public static void TrimConverter(List<Map<String, String>>newdatalist, String column_name){
+		for ( Map<String, String> d : datalist){
+			d.put(column_name, func_trim(d.get(column_name)));
+		}
 	}
 	
 	public static void ReplaceConverter(List<Map<String, String>>newdatalist, String column_name){
@@ -97,6 +103,13 @@ public class Converter {
 		if ( Val != null) {
 			rVal = Val.replace(strNin, "").replace(",", "").replace(".", "");
 		}
+		return rVal;
+	}
+	
+	public static String func_trim(String Val) {
+		String rVal = null;
+		rVal = (Val != null) ? Val.trim(): null;
+		rVal = (Val != null && Val.length() == 0) ? null : rVal;
 		return rVal;
 	}
 	

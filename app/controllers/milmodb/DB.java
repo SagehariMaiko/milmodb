@@ -13,9 +13,9 @@ public class DB {
 	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private static final String URL_FORMAT = "jdbc:sqlserver://%s:%s;database=%s";
 	
-	private static final String strfrom = "from_";
-	private static final String strto = "to_";
-	private static final String strtime = "time";
+	public static final String strfrom = "from_";
+	public static final String strto = "to_";
+	public static final String strtime = "time";
 	
 	public final Connection con;
 	
@@ -147,7 +147,7 @@ public class DB {
 					}
 					i++;
 				}
-				delete("DELETE FROM " + table + " WHERE office_id = " + Integer.valueOf(o.get(ColumnNames.OFFICE_ID)));
+				Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ));
 				ps.execute();
 			}
 		}
@@ -170,7 +170,7 @@ public class DB {
 	private void common_insertExecute(PreparedStatement ps, String formSerCd, List<String> ColList, List<Map<String,String>> offices, List<Map<String, String>> ColMap) throws SQLException {
 		String Key = null;
 		for (Map<String,String> o : offices) {
-			if (o.get(ColumnNames.VALIDATE) == null){
+			if (!(o.get(ColumnNames.VALIDATE) != null)){
 				int i = 0;
 				for ( Map<String,String> c : ColMap) {
 					Key = c.get(ColumnNames.COLUMN_NAME);
@@ -192,7 +192,7 @@ public class DB {
 					}
 					i++;
 				}
-				delete("DELETE FROM " + TableNames.OFFICE_COMMON + " WHERE " + ColumnNames.OFFICE_ID + " = " + Integer.valueOf(o.get(ColumnNames.OFFICE_ID)) + " AND " + ColumnNames.FORMSERCD + " = '" + formSerCd + "'");
+				Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ));
 				ps.execute();
 			}
 		}
@@ -215,13 +215,12 @@ public class DB {
 					}
 					break;
 				default:
-					String str = o.get(Key);
-					str = (o.get(Key) != null) ? o.get(Key).trim(): null;
-					ps.setObject(i + 1, str);
+					ps.setObject(i + 1, o.get(Key));
 					break;
 				}
 				i++;
 			}
+			Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ) + " --- " + o.get(ColumnNames.VALIDATE));
 			ps.execute();
 		}
 	}
