@@ -28,6 +28,7 @@ class BasicSpider(CrawlSpider):
         [details] = regex.findall(response.url)
         (year,versionCd1,jigyosyoCd,pref,versionCd2) = details
 
+        item["url"] = response.url
         item["service_type"] = tree.find_all(abbr = u"介護サービスの種類")[0].findNextSibling().text
 
         ## 経度・緯度はjavascriptから
