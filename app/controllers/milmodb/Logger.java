@@ -7,11 +7,11 @@ import java.util.Date;
 public class Logger {
 	private static PrintWriter pw = null;
 	private static File dayLog;
-	
+
 	public static void setup(File log, String today) throws IOException {
 		createLog(log, today);
 	}
-	
+
 	private static void createLog(File log, String today) throws IOException {
 		dayLog = new File(log.getPath() + File.separator + today + ".log");
 		if (dayLog.exists()) {
@@ -20,13 +20,13 @@ public class Logger {
 		dayLog.createNewFile();
 		pw = new PrintWriter(dayLog);
 	}
-	
+
 	public static void close() {
 		if (pw != null) {
 			pw.close();
 		}
 	}
-	
+
 	public static void write(String line) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 		pw.println(String.format(">>> %s : %s",df.format(new Date()), line));
@@ -53,6 +53,4 @@ public class Logger {
 			}
 		}
 	}
-
 }
-

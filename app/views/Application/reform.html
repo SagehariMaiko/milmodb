@@ -1,0 +1,104 @@
+#{extends 'admin.html' /}
+#{set fileName:'reform.html' /}
+
+
+<h3>詳細情報</h3>
+#{form @save(formSerCd,office_id)}
+	#{if Msg}<p><FONT color="ff0000">${Msg}</FONT></p>#{/if}
+	<p>
+		<input type="submit" onkeypress="return entsub()" tabindex="2" value="更　新" />
+	</p>
+	<p>
+		<table class="detail">
+		<caption class="url"><a href="${beforedata.url}"　 target="_blank">${beforedata.name}　の介護サービス情報公表システムを参照する</a></caption>
+			<thead class="scrollHead">
+				<tr>
+					<th class="name">項目名</th>
+					<th class="editbefore">編集前</th>
+					<th class="editafter">編集後</th>
+				</tr>
+			</thead>
+			<tbody class="scrollBody">
+				 #{list v_ColListMap, as:'collist'}
+					#{if collist.column_name != 'validate' && collist.column_name != 'validate_type' && collist.column_name != 'url'}
+						<tr>
+							<td class="name">${collist.title}</td>
+							<td class="editbefore">
+								#{if collist.inputtype == 'text'}
+									<input diabled readonly type="text" style="border-width:0px;border-style:None;" size="50" tabindex="-1" value=${beforedata.(collist.column_name)}>
+								#{/if}
+								#{if collist.inputtype == 'textarea'}
+									<textarea style="border:none;resize:none;" tabindex="-1" readonly diabled>${beforedata.(collist.column_name)}</textarea>
+								#{/if}
+								#{if collist.inputtype == 'radio'}
+									<input diabled readonly type="text" style="border-width:0px;border-style:None;" tabindex="-1" value=${beforedata.(collist.column_name)}>
+								#{/if} 
+							</td>
+							<td class="editafter">
+								#{if invalidlist.(collist.column_name)}
+									#{if collist.inputtype == 'text'}
+										#{if collist.column_name == 'hp_address'}
+											<input type="url" tabindex="1" name="${collist.column_name}"　value=${afterdata.(collist.column_name)}>
+										#{/if}
+										#{else}
+											#{if collist.placeholder}
+												<input type="text" name="${collist.column_name}" placeholder="${collist.placeholder}" tabindex="1" value=${afterdata.(collist.column_name)}>
+											#{/if}
+											#{else}	 
+												<input type="text" name="${collist.column_name}" tabindex="1" value=${afterdata.(collist.column_name)}>
+											#{/else}
+										#{/else}
+									#{/if}
+									#{if collist.inputtype == 'textarea'}
+										<textarea name="${collist.column_name}" tabindex="1">${afterdata.(collist.column_name)}</textarea>
+									#{/if}
+									#{if collist.inputtype == 'radio'}
+										#{if afterdata.(collist.column_name) == 'あり'}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="あり"　checked="checked">あり<br>
+										#{/if}
+										#{else}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="あり">あり<br>
+										#{/else}
+										#{if afterdata.(collist.column_name) == 'なし'}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="なし"　checked="checked">なし<br>
+										#{/if}
+										#{else}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="なし">なし<br>
+										#{/else}
+										#{if afterdata.(collist.column_name) == '対象なし'}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="対象なし"　checked="checked">対象なし<br>
+										#{/if}
+										#{else}
+											<input type="radio" name="${collist.column_name}" tabindex="1" value="対象なし">対象なし<br>
+										#{/else}			
+									#{/if}
+									#{if collist.message}※${collist.message}#{/if}
+									<br><FONT color="ff0000">${invalidlist.(collist.column_name)}</FONT>
+								#{/if}
+								#{else}
+									#{if collist.inputtype == 'text'}
+										<input diabled readonly type="text" name="${collist.column_name}" style="border-width:0px;border-style:None;" size="50" tabindex="-1" value=${afterdata.(collist.column_name)}>
+										<input type="hidden" name="${collist.column_name}" value=${afterdata.(collist.column_name)}>
+									#{/if}
+									#{if collist.inputtype == 'textarea'}
+										<textarea name="${collist.column_name}" style="border:none;resize:none;" tabindex="-1" diabled readonly>${afterdata.(collist.column_name)}</textarea>
+										<textarea name="${collist.column_name}" style="display:none;">${afterdata.(collist.column_name)}</textarea>	
+									#{/if}
+									#{if collist.inputtype == 'radio'}
+										<input diabled readonly type="text" name="${collist.column_name}" style="border-width:0px;border-style:None;" tabindex="-1" value=${afterdata.(collist.column_name)}>
+										<input type="hidden" name="${collist.column_name}" value=${afterdata.(collist.column_name)}>
+									#{/if}
+								#{/else}
+							</td>
+						</tr>
+					   #{/if}
+				 #{/list}
+			</tbody>
+			<input type="hidden" name="url" value=${beforedata.url}>
+			<textarea name="validate" style="display:none;">${beforedata.validate}</textarea>
+			<textarea name="validate_type" style="display:none;">${beforedata.validate_type}</textarea>
+		</table>
+	</p>
+	<input type="submit" value="更　新" />
+#{/form}
+
