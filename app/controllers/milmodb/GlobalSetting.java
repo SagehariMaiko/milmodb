@@ -15,14 +15,13 @@ public class GlobalSetting extends Properties {
 	public static final String DBPASS_KEY = "dbpass";
 	public static final String JSONPATH = "jsonpath";
 	public static final String LOGPATH = "logpath";
-	
+
 	//private final String mode;
-	
+
 	public GlobalSetting(String workDir) throws IOException {
 		InputStream is = new BufferedInputStream(new FileInputStream(workDir + "globalsetting.txt"));
 		this.load(is);
 		is.close();
 		//this.mode = mode;
 	}
-	
 }

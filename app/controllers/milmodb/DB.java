@@ -12,13 +12,9 @@ import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 public class DB {
 	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private static final String URL_FORMAT = "jdbc:sqlserver://%s:%s;database=%s";
-	
-	public static final String strfrom = "from_";
-	public static final String strto = "to_";
-	public static final String strtime = "time";
-	
-	public final Connection con;
-	
+
+	public static Connection con;
+
 	public DB(Properties globalSetting) throws Exception {
 		this.con = setupConnection(globalSetting);
 		this.con.setAutoCommit(false);
@@ -27,7 +23,7 @@ public class DB {
 				globalSetting.getProperty(GlobalSetting.DBPORT_KEY), 
 				globalSetting.getProperty(GlobalSetting.DBNAME_KEY)) + " --- Connect OK");
 	}
-	
+
 	private Connection setupConnection(Properties globalSetting) throws Exception {
 		Class.forName(DRIVER);
 		String JDBC_URL = String.format(URL_FORMAT, 
@@ -79,161 +75,107 @@ public class DB {
 			psClose(ps);
 		}
 	}
-	
-	void v_insert(String v_table, List<String> ColList, List<Map<String,String>> offices,List<Map<String, String>> ColMap) throws SQLException {
+
+	public static void v_insert(String v_table, List<String> collist, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			prepareSql(sql, ColList, v_table);
+			prepareSql(sql, collist, v_table);
 			ps = con.prepareStatement(sql.toString());
-			v_insertExecute(ps, v_table, ColList, offices, ColMap);
+			v_insertExecute(ps, v_table, data, colmap);
 		} finally {
 			psClose(ps);
-		}		
+		}
 	}
-	
-	void common_insert(String formSerCd, List<String> ColList, List<Map<String,String>> offices,List<Map<String, String>> ColMap) throws SQLException {
+
+	void common_insert(String formSerCd, List<String> collist, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			prepareSql(sql, ColList, TableNames.OFFICE_COMMON.toString());
+			prepareSql(sql, collist, TableNames.OFFICE_COMMON.toString());
 			ps = con.prepareStatement(sql.toString());
-			common_insertExecute(ps, formSerCd, ColList, offices, ColMap);
+			common_insertExecute(ps, formSerCd, data, colmap);
 		} finally {
 			psClose(ps);
-		}		
+		}
 	}
-	
-	void unique_insert(String table, List<String> ColList, List<Map<String,String>> offices,List<Map<String, String>> ColMap) throws SQLException {
+
+	void unique_insert(String table, List<String> collist, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
-			prepareSql(sql, ColList, table);
+			prepareSql(sql, collist, table);
 			ps = con.prepareStatement(sql.toString());
-			unique_insertExecute(ps, table, ColList, offices, ColMap);
+			unique_insertExecute(ps, table, data, colmap);
 		} finally {
 			psClose(ps);
-		}		
+		}
 	}
-	
-	private void unique_insertExecute(PreparedStatement ps, String table, List<String> ColList, List<Map<String,String>> offices, List<Map<String, String>> ColMap) throws SQLException {
-		String Key = null;
-		String str = null;
-		String v_colname = null;
-		for (Map<String,String> o : offices) {
-			if (o.get(ColumnNames.VALIDATE) == null){
+
+	private void unique_insertExecute(PreparedStatement ps, String table, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
+		for (Map<String,String> d : data) {
+			if (d.get(ColumnNames.VALIDATE) == null){
 				int i = 0;
-				for ( Map<String,String> c : ColMap) {
-					Key = c.get(ColumnNames.COLUMN_NAME);
-					String datatype = c.get(ColumnNames.DATATYPE);
-					switch (datatype){
-					case ColumnNames.INT:
-					case ColumnNames.NVARCHAR:
-						if (Key.indexOf(strfrom) == 0 &&  Key.indexOf(strtime) > 0) {
-							v_colname = Key.replace(strfrom, "");
-							str = (o.get(v_colname) != null) ? o.get(v_colname).substring(0, 5).replace(Converter.strhour, "") : null;
-						} else if (Key.indexOf(strto) == 0 &&  Key.indexOf(strtime) > 0) {
-							v_colname = Key.replace(strto, "");
-							str = (o.get(v_colname) != null) ? o.get(v_colname).substring(7, 12).replace(Converter.strhour, "") : null;						
-						} else {
-							str = (o.get(Key) != null) ? o.get(Key).trim(): null;
-						}
-						ps.setObject(i + 1, str);
-						break;
-					case ColumnNames.BIT:
-						String strbit = o.get(Key);
-						func_setBit(ps, strbit, i);
-						break;
-					}
+				for ( Map<String,String> c : colmap) {
+					DataTypeEnum.getValue(ps, i,  c.get(ColumnNames.DATATYPE), c.get(ColumnNames.COLUMN_NAME), d);
 					i++;
 				}
-				Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ));
+				//Logger.write(ColumnNames.OFFICE_ID + " : "+ d.get(ColumnNames.OFFICE_ID ));
 				ps.execute();
 			}
 		}
 	}
-	
-	private void func_setBit(PreparedStatement ps, String strbit, int i) throws SQLException {
-		switch (strbit) {
-		case Validater.strAri:
-			ps.setBoolean(i + 1, true);
-			break;
-		case Validater.strNashi:
-			ps.setBoolean(i + 1, false);
-			break;
-		case Validater.strTaisyoNashi:
-			ps.setString(i + 1, null);
-			break;
-		}	
-	}
-	
-	private void common_insertExecute(PreparedStatement ps, String formSerCd, List<String> ColList, List<Map<String,String>> offices, List<Map<String, String>> ColMap) throws SQLException {
-		String Key = null;
-		for (Map<String,String> o : offices) {
-			if (!(o.get(ColumnNames.VALIDATE) != null)){
+
+	private void common_insertExecute(PreparedStatement ps, String formSerCd, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
+		for (Map<String,String> d : data) {
+			if (d.get(ColumnNames.VALIDATE) == null){
 				int i = 0;
-				for ( Map<String,String> c : ColMap) {
-					Key = c.get(ColumnNames.COLUMN_NAME);
-					if (Key.equals(ColumnNames.FORMSERCD)) {
+				for ( Map<String,String> c : colmap) {
+					if (c.get(ColumnNames.COLUMN_NAME).equals(ColumnNames.FORMSERCD)) {
 						ps.setString(i + 1, formSerCd);
 					} else {
-						String datatype = c.get(ColumnNames.DATATYPE);
-						switch (datatype){
-						case ColumnNames.INT:
-						case ColumnNames.NVARCHAR:					
-							String str = (o.get(Key) != null) ? o.get(Key).trim(): null;
-							ps.setObject(i + 1, str);
-							break;
-						case ColumnNames.BIT:
-							String strbit = o.get(Key);
-							func_setBit(ps, strbit, i);
-							break;
-						}
+						DataTypeEnum.getValue(ps, i,  c.get(ColumnNames.DATATYPE), c.get(ColumnNames.COLUMN_NAME), d);
 					}
 					i++;
 				}
-				Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ));
 				ps.execute();
 			}
 		}
 	}
-	
-	private void v_insertExecute(PreparedStatement ps, String v_table, List<String> ColList, List<Map<String,String>> offices, List<Map<String, String>> ColMap) throws SQLException {
-		for (Map<String,String> o : offices) {
+
+	private static void v_insertExecute(PreparedStatement ps, String v_table, List<Map<String,String>> data, List<Map<String, String>> colmap) throws SQLException {
+		for (Map<String,String> d : data) {
 			int i = 0;
-			for ( Map<String,String> c : ColMap) {
-				String Key = c.get(ColumnNames.COLUMN_NAME);
-				switch (Key){
+			for ( Map<String,String> c : colmap) {
+				switch (c.get(ColumnNames.COLUMN_NAME)){
 				case ColumnNames.OFFICE_ID:
-					ps.setInt(i + 1, Integer.valueOf(o.get(Key)));
+					ps.setInt(i + 1, Integer.valueOf(d.get(ColumnNames.OFFICE_ID)));
 					break;
 				case ColumnNames.VALIDATE:
-					if (o.get(Key) != null) {
-						ps.setBoolean(i + 1, Boolean.valueOf(o.get(Key)));
+					if (d.get(ColumnNames.VALIDATE) != null) {
+						ps.setBoolean(i + 1, false);
 					} else {
 						ps.setBoolean(i + 1, true);
 					}
 					break;
 				default:
-					ps.setObject(i + 1, o.get(Key));
+					ps.setObject(i + 1, d.get(c.get(ColumnNames.COLUMN_NAME)));
 					break;
 				}
 				i++;
 			}
-			Logger.write(ColumnNames.OFFICE_ID + " : "+ o.get(ColumnNames.OFFICE_ID ) + " --- " + o.get(ColumnNames.VALIDATE));
 			ps.execute();
 		}
 	}
-	
-	private void j_insertExecute(PreparedStatement ps, List<String> ColList, List<Map<String,String>> offices) throws SQLException {
+
+	private void j_insertExecute(PreparedStatement ps, List<String> collist, List<Map<String,String>> offices) throws SQLException {
 		int office_id = 0;
 		for (Map<String,String> c : offices) {
-			for ( int i = 0; i < ColList.size(); ++i ) {
-				if (ColList.get(i).equals(ColumnNames.OFFICE_ID)){
+			for ( int i = 0; i < collist.size(); ++i ) {
+				if (collist.get(i).equals(ColumnNames.OFFICE_ID)){
 					ps.setInt(i + 1, office_id);
 				} else {
-					String str = (c.get(ColList.get(i)) != null) ? c.get(ColList.get(i)).trim(): null;
-					ps.setObject(i + 1, str);
+					ps.setObject(i + 1, (c.get(collist.get(i)) != null) ? c.get(collist.get(i)).trim(): null);
 				}
 			}
 			ps.execute();
@@ -241,25 +183,25 @@ public class DB {
 		}
 	}
 
-	private void prepareSql(StringBuilder sql, List<String> ColList, String table) {
+	private static void prepareSql(StringBuilder sql, List<String> collist, String table) {
 		sql.append("INSERT");
 		sql.append(" INTO ");
 		sql.append(table);
 		sql.append('(');
 
 		int i = 0;
-		for (i = 0; i < ColList.size(); ++i) {
+		for (i = 0; i < collist.size(); ++i) {
 			sql.append((i > 0) ? "," : "");
-			sql.append(ColList.get(i));
+			sql.append(collist.get(i));
 		}
 		sql.append(')');
 		sql.append(" VALUES (");
-		for (i = 0; i < ColList.size(); i++) {
+		for (i = 0; i < collist.size(); i++) {
 			sql.append((i > 0) ? ",?" : "?");
 		}
 		sql.append(')');
 	}
-		
+
 	void update(String table, boolean b, String formSerCd) throws SQLException {
 		PreparedStatement ps = null;
 		try {
@@ -271,13 +213,13 @@ public class DB {
 			psClose(ps);
 		}
 	}
-	
+
 	private void updateExecute(PreparedStatement ps, boolean b, String formSerCd) throws SQLException {
 			ps.setBoolean(1, b);
-			ps.setString(2, formSerCd);		
+			ps.setString(2, formSerCd);
 			ps.execute();
 	}
-	
+
 	private void updateSql(StringBuilder sql, String table, String setCol, String whCol) {
 		sql.append(" UPDATE ");
 		sql.append(table);
@@ -288,7 +230,7 @@ public class DB {
 		sql.append(whCol);
 		sql.append(" = ? ");
 	}
-	
+
 	void updateAll(String table, boolean b) throws SQLException {
 		PreparedStatement ps = null;
 		try {
@@ -300,7 +242,7 @@ public class DB {
 			psClose(ps);
 		}
 	}
-	
+
 	private void updateAllSql(StringBuilder sql, String table, String setCol) {
 		sql.append(" UPDATE ");
 		sql.append(table);
@@ -308,12 +250,12 @@ public class DB {
 		sql.append(setCol);
 		sql.append(" = ? ");
 	}
-	
+
 	private void updateAllExecute(PreparedStatement ps, boolean b) throws SQLException {
 		ps.setBoolean(1, b);
 		ps.execute();
-}
-	
+	}
+
 	public void delete(String sql) throws SQLException {
 		PreparedStatement ps = null;
 		try {
@@ -323,7 +265,7 @@ public class DB {
 			psClose(ps);
 		}
 	}
-	
+
 	public boolean exist_table(String stadName, String table) throws SQLException {
 		CallableStatement cstmt = null;
 		boolean b = false;
@@ -335,7 +277,7 @@ public class DB {
 		cstmtClose(cstmt);
 		return b;
 	}
-		
+
 	public List<Map<String, String>> select(String sql) throws SQLException {
 		Statement stmt = null;
 		ResultSet rset = null;
@@ -346,7 +288,6 @@ public class DB {
 		} finally {
 			silentClose(rset,stmt);
 		}
-
 	}
 
 	protected final List<Map<String, String>> getData(ResultSet rset) throws SQLException {
@@ -373,8 +314,8 @@ public class DB {
 			stmt.close();
 		}
 	}
-	
-	private void psClose(PreparedStatement ps) throws SQLException {
+
+	private static void psClose(PreparedStatement ps) throws SQLException {
 		if (ps != null) {
 			ps.close();
 		}

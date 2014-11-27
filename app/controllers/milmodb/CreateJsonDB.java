@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import util.common.*;
-import util.function.CreateColList;
+import util.function.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,12 +17,11 @@ public class CreateJsonDB {
 	private static final int NORMAL_END = 0;
 	private static final int ERROR_END = -1;
 	public static final String projectFolder = "app" + File.separator + "controllers" + File.separator + "milmodb" + File.separator;
-	
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.exit(new CreateJsonDB().pickfile(args));
 	}
-	
+
 	private int pickfile(String[] args){
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 		String today = df.format(new Date());
@@ -72,14 +71,14 @@ public class CreateJsonDB {
 			System.out.println(">> finish!!: " + today);
 		}
 	}
-	
+
 	public void parse(DB db, File data, List<Map<String, String>> columnlist, String filename, String table) throws SQLException, JsonParseException, JsonMappingException, IOException {
 		List<Map<String,String>> offices = new ObjectMapper().readValue(data,new TypeReference<List<Map<String,String>>>() {});	
 		List<String> ColList = new ArrayList<String>();
-		CreateColList.CreateCol(columnlist, ColList);
+		CommonFunc.CreateCol(columnlist, ColList);
 		db.j_insert(table, ColList, offices);
 	}
-			
+
 	public String gettablename(List<Map<String, String>> tablelist,String filename){
 		String table = null;
 		for (Map<String, String> map : tablelist) {
