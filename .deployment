@@ -1,2 +1,2 @@
 [config]
-command = cp -rp %DEPLOYMENT_SOURCE%\editmilmodb.war %DEPLOYMENT_TARGET%/webapps/root.war
+command = cp %DEPLOYMENT_SOURCE%\editmilmodb.war %DEPLOYMENT_TARGET%/webapps/root.war
