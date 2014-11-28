@@ -1,3 +1,2 @@
 [config]
-command = mkdir %DEPLOYMENT_TARGET%/webapps/root.war
-command = cp -rp %DEPLOYMENT_SOURCE%\editmilmodb.war %DEPLOYMENT_TARGET%/webapps/root.war
+command = cp %DEPLOYMENT_SOURCE%/target/editmilmodb.war %DEPLOYMENT_TARGET%/bin/jetty-*/webapps/ROOT.war
