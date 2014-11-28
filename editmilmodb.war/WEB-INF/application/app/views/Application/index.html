@@ -1,0 +1,27 @@
+#{extends 'admin.html' /}
+
+#{if servicenames}
+	<div class="service-names">	   
+		<h3>介護サービス一覧</h3>
+		<table class="servicenames">
+			<tbody>
+				<tr>
+					<th class="formSerCd">formSerCd</th>
+					<th class="servicetype">サービスの種類</th>
+					<th class="falsecount">残件数</th>
+					<th class="allcount">済件数</th>
+					<th class="scrapedate">最新データ取得日時</th>
+				</tr>		
+				#{list items:servicenames, as:'servicename'}
+					<tr>
+						<td class="formSerCd">${servicename.formSerCd}</td>
+						<td><a href="@{Application.show(servicename.formSerCd)}">${servicename.service_name}</td>
+						<td class="falsecount">${servicename.rowcnt}</td>
+						<td class="allcount"></td>
+						<td class="scrapedate"></td>
+					</tr>
+				#{/list} 
+			</tbody>
+		</table>
+	</div>
+#{/if}

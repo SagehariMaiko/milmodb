@@ -1,0 +1,26 @@
+#{extends 'admin.html' /}
+ 
+#{if data}
+	<div class="office_list">	 
+		<h3>事業所一覧</h3>
+		<table class="servicenames">
+			<tbody>
+				<tr>
+					<th class="office_id">office_id</th>
+					<th class="servicetype">サービスの種類</th>
+					<th class="office_name">事業所名称</th>
+					<th class="office_no">事業所番号</th>
+				</tr>
+				#{list data, as:'d'}
+					<tr>
+						<td class="office_id">${d.office_id}</td>
+						<td class="servicetype">${d.service_type}</td>
+						<td><a href="@{Application.form(formSerCd, d.office_id)}">${d.name}</a></td>
+						<td class="office_no">${d.office_no}</td>
+					</tr>
+				#{/list}
+			</tbody>
+		</table>
+	</div>
+	
+#{/if}

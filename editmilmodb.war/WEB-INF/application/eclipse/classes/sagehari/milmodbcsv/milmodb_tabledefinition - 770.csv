@@ -1,0 +1,57 @@
+table_name,mix_service,複合型サービス,,,,
+NO,column_name,datatype,length,v_home_careのカラム名,titile,memo
+1,office_id,int,,,,
+2,from_office_time_kayoi,NVARCHAR,4,office_time_kayoiの先頭４文字,営業時間（通いサービス）の開始時間,時分省いて4桁数字文字列
+3,to_office_time_kayoi,NVARCHAR,4,office_time_kayoiの後ろ４文字,営業時間（通いサービス）の終了時間,時分省いて4桁数字文字列
+4,from_office_time_stay,NVARCHAR,4,office_time_stayの先頭４文字,営業時間（宿泊サービス）の開始時間,時分省いて4桁数字文字列
+5,to_office_time_stay,NVARCHAR,4,office_time_stayの後ろ４文字,営業時間（宿泊サービス）の終了時間,時分省いて4桁数字文字列
+6,service_area,NVARCHAR(MAX),,service_area,事業所が通常時に介護サービスを提供する地域,
+7,sougei_1,BIT,,sougei_1,利用者の送迎の実施,あり→1　なし→0　対象なし→NULL
+8,nintisyo_1,BIT,,nintisyo_1,認知症加算（Ⅰ）,あり→1　なし→0　対象なし→NULL
+9,nintisyo_2,BIT,,nintisyo_2,認知症加算（Ⅱ）,あり→1　なし→0　対象なし→NULL
+10,jigyokaishishien,BIT,,jigyokaishishien,事業開始時支援加算,あり→1　なし→0　対象なし→NULL
+11,kinkyujihoumon,BIT,,kinkyujihoumon,緊急時訪問看護加算,あり→1　なし→0　対象なし→NULL
+12,specialkanri_1,BIT,,specialkanri_1,特別管理加算（Ⅰ）,あり→1　なし→0　対象なし→NULL
+13,specialkanri_2,BIT,,specialkanri_2,特別管理加算（Ⅱ）,あり→1　なし→0　対象なし→NULL
+14,terminalcare,BIT,,terminalcare,ターミナルケア加算,あり→1　なし→0　対象なし→NULL
+15,service_supply_1,BIT,,service_supply_1,サービス提供体制強化加算（Ⅰ）,あり→1　なし→0　対象なし→NULL
+16,service_supply_2,BIT,,service_supply_2,サービス提供体制強化加算（Ⅱ）,あり→1　なし→0　対象なし→NULL
+17,service_supply_3,BIT,,service_supply_3,サービス提供体制強化加算（Ⅲ）,あり→1　なし→0　対象なし→NULL
+18,carestaffkaizen_1,BIT,,carestaffkaizen_1,介護職員処遇改善加算（Ⅰ）,あり→1　なし→0　対象なし→NULL
+19,carestaffkaizen_2,BIT,,carestaffkaizen_2,介護職員処遇改善加算（Ⅱ）,あり→1　なし→0　対象なし→NULL
+20,carestaffkaizen_3,BIT,,carestaffkaizen_3,介護職員処遇改善加算（Ⅲ）,あり→1　なし→0　対象なし→NULL
+21,tube_feeding,BIT,,tube_feeding,経管栄養法（胃ろうを含む）,あり→1　なし→0　対象なし→NULL
+22,ivh,BIT,,ivh,在宅中心静脈栄養法（ＩＶＨ）,あり→1　なし→0　対象なし→NULL
+23,iv_drip,BIT,,iv_drip,点滴・静脈注射,あり→1　なし→0　対象なし→NULL
+24,bladder_catheterization,BIT,,bladder_catheterization,膀胱留置カテーテル,あり→1　なし→0　対象なし→NULL
+25,nephrostomy,BIT,,nephrostomy,腎ろう・膀胱ろう,あり→1　なし→0　対象なし→NULL
+26,hot,BIT,,hot,在宅酸素療法（ＨＯＴ）,あり→1　なし→0　対象なし→NULL
+27,respirator,BIT,,respirator,人工呼吸療法（レスピレーター、ベンチレーター）,あり→1　なし→0　対象なし→NULL
+28,capd,BIT,,capd,在宅自己腹膜灌流（ＣＡＰＤ）,あり→1　なし→0　対象なし→NULL
+29,artificial_anus,BIT,,artificial_anus,人工肛門（ストマ）,あり→1　なし→0　対象なし→NULL
+30,artificial_bladder,BIT,,artificial_bladder,人工膀胱,あり→1　なし→0　対象なし→NULL
+31,tracheal_cannula,BIT,,tracheal_cannula,気管カニューレ,あり→1　なし→0　対象なし→NULL
+32,absorb,BIT,,absorb,吸引,あり→1　なし→0　対象なし→NULL
+33,drug_pain_control,BIT,,drug_pain_control,麻薬を用いた疼痛管理,あり→1　なし→0　対象なし→NULL
+34,medical_other_name,NVARCHAR,30,medical_other_name,その他（項目名）,
+35,medical_other,BIT,,medical_other,その他,
+36,morning_price,INT,,morning_price,朝食,
+37,lunch_price,INT,,lunch_price,昼食,
+38,dinner_price,INT,,dinner_price,夕食,
+39,snack_price,INT,,snack_price,おやつ,
+40,stay_price,INT,,stay_price,宿泊費,
+41,other_name_1,NVARCHAR,20,other_name_1,１名称,
+42,other_price_1,INT,,other_price_1,１その額,
+43,other_biko_1,NVARCHAR(MAX),,other_biko_1,１算定方法,
+44,other_name_2,NVARCHAR,20,other_name_2,２名称,
+45,other_price_2,INT,,other_price_2,２その額,
+46,other_biko_2,NVARCHAR(MAX),,other_biko_2,２算定方法,
+47,other_name_3,NVARCHAR,20,other_name_3,３名称,
+48,other_price_3,INT,,other_price_3,３その額,
+49,other_biko_3,NVARCHAR(MAX),,other_biko_3,３算定方法,
+50,other_name_4,NVARCHAR,20,other_name_4,４名称,
+51,other_price_4,INT,,other_price_4,４その額,
+52,other_biko_4,NVARCHAR(MAX),,other_biko_4,４算定方法,
+53,other_name_5,NVARCHAR,20,other_name_5,５名称,
+54,other_price_5,INT,,other_price_5,５その額,
+55,other_biko_5,NVARCHAR(MAX),,other_biko_5,５算定方法,
