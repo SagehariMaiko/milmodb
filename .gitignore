@@ -10,8 +10,11 @@
 /public/secure
 *.log
 *.pyc
+*.pid
 /build/
 /logs/system.out
+/precompiled
+/modules
 
 #for testing
 /test-result
